@@ -1,0 +1,132 @@
+.card {
+    --bs-card-border-color: none;
+}
+.btn-block {
+    display: block;
+    width: 100%;
+}
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+.login-page, .register-page {
+    -ms-flex-align: center;
+    align-items: center;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    height: 100vh;
+    -ms-flex-pack: center;
+    justify-content: center
+}
+.login-logo, .register-logo {
+    font-size: 2.1rem;
+    font-weight: 300;
+    text-align: center
+}
+.login-box, .register-box {
+    width: 430px;
+    margin: 40px auto 42px;
+    padding: 0 69px;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+@media (max-width: 576px) {
+    .login-box, .register-box {
+        margin-top: .5rem;
+        width: 90%;
+        padding: 0 45px;
+    }
+    .login-card-body, .register-card-body {
+        padding: 40px 0 30px;
+    }
+}
+.login-box .card, .register-box .card {
+    margin-bottom: 0
+}
+
+.login-card-body, .register-card-body {
+    color: #666;
+    padding: 55px 0 45px;
+    box-sizing: border-box;
+}
+li:nth-child(2)::before {
+    content: "";
+    float: left;
+    width: 1px;
+    height: 10px;
+    margin: 4px 10px;
+    background-color: rgba(0, 0, 0, .08);
+}
+li:nth-child(3)::before {
+    content: "";
+    float: left;
+    width: 1px;
+    height: 10px;
+    margin: 4px 10px;
+    background-color: rgba(0, 0, 0, .08);
+}
+.mb-3 {
+    margin: 0 0 1.2rem !important;
+}
+label {
+    margin-top: 5px;
+    padding-left: 0.5rem;
+}
+.login-page {
+    min-height: 840px;
+    min-width: 372px;
+}
+
+/* 회원가입 선택 */
+.sel_register_card {
+    --bs-card-border-color: #6575d1;
+    border-radius: 3rem;
+    border-width: 0.7rem;
+    margin-bottom: 1rem;
+}
+.sel_register_btn {
+    width: 268px; 
+    height: 268px; 
+    font-weight: 400; 
+    font-size: 30px;
+    margin-left: 0;
+}
+.select-card {
+    width: 300px; 
+    height: 300px; 
+}
+.register-icon {
+    font-size: 70px; 
+    padding-bottom: 1rem;
+}
+.register-font {
+    font-weight: bold; 
+    font-size: 33px;
+}
+@media screen and (max-width: 767px) {
+    .row {
+        display: block;
+    }
+    .select-card {
+        height: 150px;
+    }
+    .sel_register_btn {
+        height: 118px;
+    }
+    .sel_register_card {
+        border-radius: 1rem;
+        border-width: 0.5rem;
+    }
+    .register-icon {
+        font-size: 45px; 
+        padding-bottom: 1rem;
+    }
+    .register-font {
+        font-weight: 500; 
+        font-size: 30px;
+    }
+}

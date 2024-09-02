@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AQUAPONICS</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.3/themes/base/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style/sidebar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/btn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.css"/>
+    <link rel="stylesheet" href="style/duallist.css">
+    <link rel="stylesheet" href="style/kakao_map.css">
+</head>
+
+
+
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+        <nav class="navbar navbar-expand navbar-light" style="flex-grow: 1;">
+            <ul class="navbar-nav">
+                <a href="/"><img src="imgs/aqufarm.png" style="height: 45px; padding: 0.5rem; margin-left: 0.5rem;"></a>
+            </ul>
+        </nav>
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <ui class="d-flex navbar-nav" style="margin-left: auto !important;">
+                <li class="navbar-text" style="padding: 0.5rem;">
+                    <span id="level"></span>
+                </li>
+                <!-- <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                    <span id="username" style="height: 28px;">홍길동</span>
+                </li> -->
+                <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
+                    <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
+                        <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="javascript:logout()">로그아웃</a></li>
+                    </ul>
+                </li>
+            </ui>
+        </nav>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="navsidebar">
+            <div>
+                <a href="/" class="nav_logo" style="padding-left: 22px;">
+                    <i ><img src="imgs/am_h20.png" width="30px;"></i>
+                    <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
+                </a>
+                <div class="nav_list">
+                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">대시보드</span>
+                    </a>
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    </ul>
+                    <a href="/student_manage" class="nav_link" id="stumanag" title="학생관리">
+                        <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
+                    </a>
+                    <a href="/admin" class="nav_link active" id="settings" title="설정">
+                        <i class='bx bx-cog nav_icon'></i>
+                        <span class="nav_name">설정</span>
+                    </a>
+                </div>
+            </div>
+
+            <a href="#" onclick="javascript:logout()" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
+                <span class="nav_name">SignOut</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="height-100 bg-light" style="padding: 1rem;">
+        <div class="wrapper" id="device_card">
+            <ul class="nav nav-tabs" id="nav-tabs" style="padding: 0 0.2rem 0 0.1rem; border-color: transparent;">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#manager">사용자 관리</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#submit" onclick="ap_table()">가입 승인</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="manager" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card">
+                        <div class="card-header"> 
+                            <span class="card-title">사용자 검색</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-3" id="school_div">
+                                    <div class="input-group flex-nowrap">
+                                        <span class="input-group-text">학교</span>
+                                        <input type="text" id="school" name="school" class="form-control" maxlength="45">
+                                        <button type="button" class="btn btn-purple" onclick="openModal()" aria-controls="home" aria-selected="true">검색</button>
+                                    </div>
+                                </div>
+                                <div style="padding-bottom: 0.5rem; display: none;" class="col-sm-6 col-lg-3" id="gen_region">
+                                    <div class="input-group flex-nowrap">
+                                        <select id="region" name="school" class="form-select" disabled> 
+                                            <option selected value="" selected>전체</option>
+                                            <option value="서울특별시">서울특별시</option>
+                                            <option value="광주광역시">광주광역시</option>
+                                            <option value="대구광역시">대구광역시</option>
+                                            <option value="부산광역시">부산광역시</option>
+                                            <option value="울산광역시">울산광역시</option>
+                                            <option value="인천광역시">인천광역시</option>
+                                            <option value="강원도">강원도</option>
+                                            <option value="경기도">경기도</option>
+                                            <option value="경상남도">경상남도</option>
+                                            <option value="경상북도">경상북도</option>
+                                            <option value="전라남도">전라남도</option>
+                                            <option value="전라북도">전라북도</option>
+                                            <option value="충청남도">충청남도</option>
+                                            <option value="충청북도">충청북도</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
+                                    <div class="input-group flex-nowrap">
+                                        <span class="input-group-text">이름</span>
+                                        <input type="text" id="name" name="name" class="form-control" maxlength="45" onkeypress="if(event.keyCode == 13){ search(); }">
+                                        <select id="ulevel" name="level" class="form-select form-select-sm" style="flex: 0.2 1 auto;">
+                                            <option value="">전체</option>
+                                            <option value="0">학생</option>
+                                            <option value="1">교사</option>
+                                            <option value="2">일반</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="padding-bottom: 0.5rem;" class="col-sm-6 col-lg-4">
+                                    <div class="input-group flex-nowrap">
+                                        <span class="input-group-text">가입일</span>
+                                            <input type="text" name="stdate" id="stdate" class ="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="d-grid col-sm-6 col-lg-1" style="padding-bottom: 0.5rem;">
+                                    <button id="upload_button" onclick="search()" class="btn btn-purple waves-effect waves-light" style="float:right; min-width: 58.75px;">검색</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 2rem 0 2rem 0;">
+                        <div class="col-12">
+                            <div class="card" id="card_search" style="display: none;">
+                                <div class="card-header">
+                                    <span class="card-title">사용자 검색 결과</span>
+                                </div>
+                                <!-- card-header end -->
+                                <div class="card-body">
+                                    <div class="table-responsive" >
+                                        <table class="table table-hover" id="tables" style="white-space: nowrap; width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>아이디</th>
+                                                    <th>학교</th>
+                                                    <th>직급</th>
+                                                    <th>이름</th>
+                                                    <th>학년</th>
+                                                    <th>반</th>
+                                                    <th>번호</th>
+                                                    <th>가입날짜</th>
+                                                    <th>기기권한</th>
+                                                    <th>관리</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="table_body" style="min-height: 200px;">
+                                            </tbody>
+                                        </table>
+
+                                        <table class="table table-hover" id="gen_tables" style="white-space: nowrap; width: 100%; display: none;">
+                                            <thead>
+                                                <tr>
+                                                    <th>이메일</th>
+                                                    <th>지역</th>
+                                                    <th>직급</th>
+                                                    <th>이름</th>
+                                                    <th>가입날짜</th>
+                                                    <th>기기권한</th>
+                                                    <th>관리</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="gen_table_body" style="min-height: 200px;">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- card-body end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="submit" role="tabpanel" aria-labelledby="submit-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">가입 요청 사용자</span>
+                        </div>
+                        <!-- card-header end -->
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="ap_tables" style="white-space: nowrap; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>이메일</th>
+                                            <th>학교</th>
+                                            <th>직급</th>
+                                            <th>이름</th>
+                                            <th>학년</th>
+                                            <th>반</th>
+                                            <th>번호</th>
+                                            <th>가입날짜</th>
+                                            <th>#</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- card-body end -->
+                    </div>
+                </div>
+            </div>
+            <!-- </div> -->
+        </div>
+    </div>
+    <div class="modal" id="schoolSerch">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">학교 검색</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="map_wrap">
+                        <div class="maps" id="kakao_map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                        <div id="menu_wrap" class="bg_white">
+                            <div class="option">
+                                <div class="input-group" style="margin-bottom: 1rem;">
+                                    <input type="text" name="search_map" id="search_map" class="form-control" placeholder="검색" onkeypress="if(window.event.keyCode==13) { search_school() }">
+                                    <a class="input-group-text" href="#" onclick="search_school()">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr>
+                            <ul id="placesList"></ul>
+                            <div id="pagination"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <!-- <button type="button" class="btn btn-primary">완료</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="device_modal">
+        <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title">title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <select multiple="multiple" class="multiple-select" id="modal-select">
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" id="modal_success_btn" onclick="updateDevice(this)">완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.min.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/memberAuth.js"></script>
+    <script src="js/range_picker.js"></script>
+    <script src="js/permission_manage.js"></script>
+    <script src="js/member_control.js"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc&libraries=services"></script>
+    <script src="js/kakao_map.js"></script>
+    
+    <script>
+        var multiplelist = null;
+
+        // datatables
+        function ap_table() {
+            var datas = [];
+
+            axios({
+                url: "/members_temp",
+                method: "post",
+            }).then(function(data) {
+                $.each(data.data, (i, v) => {
+                    let level = '';
+                    if (v.level == 0) level = '학생'
+                    else if (v.level == 1) level = '교사'
+                    else if (v.level == 2) level = '일반'
+                    else if (v.level == 3) level = '관리자'
+                    datas.push([
+                        v.id,
+                        v.school,
+                        level,
+                        v.name,
+                        v.grade,
+                        v.class,
+                        v.number,
+                        dayjs(v.date).format("YYYY-MM-DD"),
+                        `<button type="button" class="btn btn-success" onclick="sign('${v.id}', 0, 1, 1)">승인</button>
+                        <button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 1, 2)">거절</button>`
+                    ])
+                    if (data.data.length - 1 == i) {
+                        new DataTable('#ap_tables', 
+                        { 
+                            columnDefs: [
+                                { className: 'dt-head-center', targets: "_all", },
+                                { className: 'dt-body-center', targets: "_all", },
+                            ], scrollX: true, paging: true, destroy: true, data: datas 
+
+                        });
+                    }
+                })
+            })
+        }
+
+        function creatTables(data, table) {
+            var datas = [];
+
+            if (data == '') {
+                new DataTable(`#${table}`, 
+                    { 
+                        columnDefs: [
+                            { className: 'dt-head-center', targets: "_all", },
+                            { className: 'dt-body-center', targets: "_all", },
+                        ], scrollX: true, paging: true, destroy: true, data: datas 
+                    });
+            }
+            $.each(data, (i, v) => {
+                let level = '';
+                if (v.level == 0) level = '학생'
+                else if (v.level == 1) level = '교사'
+                else if (v.level == 2) level = '일반'
+                if (member[0].level == 3) {
+                    datas.push([
+                        v.id,
+                        v.school,
+                        level,
+                        v.name,
+                        v.grade,
+                        v.class,
+                        v.number,
+                        dayjs(v.date).format("YYYY-MM-DD"),
+                        `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
+                        `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
+                    ])
+                } else {
+                    datas.push([
+                        v.id,
+                        v.school,
+                        level,
+                        v.name,
+                        dayjs(v.date).format("YYYY-MM-DD"),
+                        `<button type="button" class="btn btn-success" onclick="modal_func('${v.id}', ${v.level}, 0)"  id="modal_${v.id}">권한관리</button>`,
+                        `<button type="button" class="btn btn-danger" onclick="sign('${v.id}', 1, 0, 0)">삭제</button>`
+                    ])
+                }
+                if (data.length - 1 == i) {
+                    new DataTable(`#${table}`, 
+                    { 
+                        columnDefs: [
+                            { className: 'dt-head-center', targets: "_all", },
+                            { className: 'dt-body-center', targets: "_all", },
+                        ], scrollX: true, paging: true, destroy: true, data: datas 
+                    });
+                }
+            })
+        }
+
+
+        function search() {
+            $("#card_search").css('display', '');
+
+            axios({
+                url: "/searchTable",
+                method: "post",
+                data: {
+                    school: (member[0].level == 4) ? $("#region").val() : $("#school").val(),
+                    grade: '',
+                    class: '',
+                    level: $("#ulevel").val(),
+                    userLevel: member[0].level,
+                    name: $("#name").val(),
+                    start: $("#stdate").val().split(" ~ ")[0],
+                    end: $("#stdate").val().split(" ~ ")[1],
+                },
+            }).then(function(data) {
+                if (member[0].level == 4) creatTables(data.data, 'gen_tables') 
+                else creatTables(data.data, 'tables') 
+            })
+        }
+
+        $(document).ready(function() {
+            if (member[0].level == 4) {
+                $("#region").attr('disabled', false);
+                $("#region").attr('disabled', false);
+                $("#school").attr('disabled', true);
+                $("#gen_region").show();
+                $("#school_div").hide();
+                $("#ulevel option[value='2']").attr('selected', true);
+                $("#ulevel").attr('disabled', true);
+                $("#tables").css('display', 'none');
+                $("#gen_tables").css('display', '');
+            }
+        })
+    </script>
+    
+</body>
+</html>

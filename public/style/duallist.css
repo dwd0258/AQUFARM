@@ -1,0 +1,14 @@
+.ms-choice>.placeholder {
+    cursor: pointer;
+}
+.dual-listbox__button {
+    margin-right: 0.1rem !important;
+    background-color: #6575d1 !important;
+}
+@media screen and (max-width: 991px) {
+
+    .dual-listbox__buttons {
+        flex-direction: row !important;
+        margin: 0 10px !important;
+    }
+}

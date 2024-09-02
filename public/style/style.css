@@ -1,0 +1,4 @@
+th.dt-head-center, td.dt-head-center,
+th.dt-body-center, td.dt-body-center { 
+  vertical-align: middle; 
+}

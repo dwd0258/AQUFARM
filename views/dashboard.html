@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AQUAPONICS</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style/sidebar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/btn.css">
+    <link rel="stylesheet" href="style/circle_progressbar.css">
+    <link rel="stylesheet" href="style/dashboard.css">
+    <style>
+        .enver-card {
+            height: 16.08vh;
+        }
+    </style>
+</head>
+
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+        <nav class="navbar navbar-expand navbar-light" style="flex-grow: 1;">
+            <ul class="navbar-nav">
+                <a href="/"><img src="imgs/aqufarm.png" style="height: 45px; padding: 0.5rem; margin-left: 0.5rem;"></a>
+            </ul>
+        </nav>
+
+
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <ul class="d-flex navbar-nav" style="margin-left: auto !important;">
+                <li class="navbar-text" style="padding: 0.5rem;">
+                    <span id="level"></span>
+                </li>
+                <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
+                    <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
+                        <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#" onclick="javascript:logout()">로그아웃</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="navsidebar">
+            <div>
+                <a href="/" class="nav_logo" style="padding-left: 22px;">
+                    <i><img src="imgs/am_h20.png" width="30px;"></i>
+                    <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
+                </a>
+                <div class="nav_list">
+                    <a href="#" class="nav_link active" data-bs-toggle="collapse" data-bs-target="#pages"
+                        aria-expanded="false" aria-controls="pages">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">대시보드</span>
+                    </a>
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    </ul>
+                    <a href="#" class="nav_link" id="chartlink" onclick="openChart()">
+                        <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
+                        <span class="nav_name">차트</span>
+                    </a>
+                    <a href="/student_manage" class="nav_link" id="stumanag" title="학생관리">
+                        <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
+                    </a>
+                    <a href="/admin" class="nav_link" id="settings" title="설정">
+                        <i class='bx bx-cog nav_icon'></i>
+                        <span class="nav_name">설정</span>
+                    </a>
+                </div>
+            </div>
+
+            <a href="#" onclick="logout()" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
+                <span class="nav_name">SignOut</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="height-100 bg-light srcn" style="padding: 1rem;">
+        <h4 style="padding: 0 0.5rem 0 0.5rem;" id="dashboard_name"></h4>
+        <div class="main-container">
+            <!-- 비디오 카드 -->
+            <div class="row w-100 row-screen">
+                <div class="col-12 col-lg-6 col-sm-12 col-md-8">
+                    <div class="row">
+                        <div class="video-card">
+                            <div class="card-inner card" onclick="display()" style="cursor: pointer;">
+                                <canvas class="video-item" id="plant"></canvas>
+                                <canvas class="video-item" id="fish" hidden></canvas>
+                                <!-- <img class="video-item" src="imgs/sample.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="plant">
+                                <img class="video-item" src="imgs/sample2.png" style="border-radius: 10px; margin-bottom: 1rem; position: relative;" id="fish" hidden> -->
+                                <div class="video-btn" style="position: absolute; margin: 1rem;">
+                                    <button type="button" class="btn btn-purple btn-sm" onclick="display()" id="display-btn" value='0' style="pointer-events: none;">전환</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-card">
+                            <div class="card-inner card">
+                                <div class="video-item" style="padding-bottom: 0.5rem;">
+                                    <!-- /.card-header -->
+                                     
+                                    <ul class="nav nav-pills w-100">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#" data-bs-target="#temp-tabs"
+                                                data-bs-toggle="tab" style="padding: 5px;">온도</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#" data-bs-target="#sensor-tabs" data-bs-toggle="tab" style="padding: 5px;">센서</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#" data-bs-target="#illum-tabs" data-bs-toggle="tab" style="padding: 5px;">조도</a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" style="height: 100%; overflow-y: hidden; overflow-x: scroll;">
+                                        <div class="tab-pane chart-height active" id="temp-tabs">
+                                            <div id="temp-chart"></div>
+                                        </div>
+                                        <div class="tab-pane chart-height" id="sensor-tabs">
+                                            <div id="sensor-chart"></div>
+                                        </div>
+                                        <div class="tab-pane chart-height" id="illum-tabs">
+                                            <div id="illum-chart"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-4 col-sm-12 card-all">
+                    <div class="card-container">
+                        <div class="row" style="margin: calc(-1 * var(--bs-gutter-y)) 0 0 0;">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="ex_temp">
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="water_temp">
+                            </div>
+
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="hum">
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 enver-card " onclick="this.classList.toggle('flipped')" id="illum">
+                            </div>
+
+                            <div class="col-12 enver-card" onclick="toggle_sensor(this)" style="width: 100%;" id="motor" value="0">
+                            </div>
+                            <div class="col-12 enver-card" onclick="toggle_sensor(this)" style="width: 100%;" id="bubble" value="0">
+                            </div>
+                            <div class="col-12 enver-card" onclick="toggle_sensor(this)" style="margin-bottom: 0; width: 100%;" id="led" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/memberAuth.js"></script>
+    <script src="js/create_chart.js"></script>
+    <script>
+        const params = new URLSearchParams(location.search);
+        const device_id = params.get('device');
+        const service = params.get('service');
+        const device_level = params.get('level');
+        const colors = ["#FF1654", "#247BA0", "#009000"]
+        
+        $(document).ready(function () {
+            $("#chartlink").on("click", function() { window.location = (`/chart?name=${params.get('name')}&device=${params.get('device')}&service=${params.get('service')}`) });
+            $("#dashboard_name").text(params.get('name'));
+
+            axios({
+                url: '/search_envir',
+                method: 'post',
+                data: {
+                    device_id: device_id,
+                    start: ''.split(" ~ ")[0],
+                    end: ''.split(" ~ ")[1],
+                },
+            }).then(function(data) {
+                let temp_data = [[], [], []];
+                let sensor_data = [[], [], []];
+                let illum_data = [[]];
+                let time = [];
+                
+                $.each(data.data, (i, v) => {
+                    temp_data[0].push(v.ex_temp);
+                    temp_data[1].push(v.water_temp);
+                    temp_data[2].push(v.hum);
+                    sensor_data[0].push(v.motor)
+                    sensor_data[1].push(v.bubble)
+                    sensor_data[2].push(v.led)
+                    illum_data[0].push(v.illum)
+                    time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
+                    if (data.data.length - 1 == i) {
+                        create_envircard(data.data, time.at(-1))
+                        create_chart(temp_data, time, "#temp-chart", ['외부온도', '수온', '습도'], 'temp', 3);
+                        create_chart(sensor_data, time, "#sensor-chart", ['모터', '기포', 'LED'], 'sensor', 3);
+                        create_chart(illum_data, time, "#illum-chart", ['조도'], 'illum', 1);
+                    }
+                })
+            })
+            
+            // axios({
+            //     url: 'get_stream',
+            //     method: 'post',
+            // }).then(function(data) {
+            //     console.log(data);
+            //     var client = new WebSocket('ws://localhost:9999');
+            //     c1 = $("#plant");
+            //     c2 = $("#fish");
+
+            //     var p1 = new jsmpeg(client, {
+            //         canvas: c1
+            //     });
+            //     var p2 = new jsmpeg(client, {
+            //         canvas: c2
+            //     });
+            // })
+        })
+
+        function update_pg() {
+            $(".progress").each(function() {
+                var value = $(this).attr('data-value');
+                var left = $(this).find('.progress-left .progress-bar');
+                var right = $(this).find('.progress-right .progress-bar');
+
+                if (value > 0) {
+                    if (value <= 50) {
+                        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+                    } else {
+                        right.css('transform', 'rotate(180deg)')
+                        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+                    } 
+                } else {
+                    right.css('transform', 'rotate(0deg)')
+                    left.css('transform', 'rotate(0deg)')
+                }
+            })
+            function percentageToDegrees(percentage) { return percentage / 100 * 360 }
+        }
+
+        function create_envircard(data, time) {
+            let sensors = null;
+            $.ajax({
+                url: '/get_sensor',
+                method: 'get',
+                data: { device_id: device_id, },
+                async: false,
+                success: function(data) { sensors = data; }
+            })
+            const icons = ['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud', 
+                        'fa-solid fa-solar-panel','fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'];
+            const GROUP = [['외부온도', 'ex_temp', '°C'], ['수온', 'water_temp', '°C'], ['습도', 'hum', '%'], ['조도', 'illum', 'lx'], 
+            ['모터', 'motor', ''], ['기포', 'bubble', ''], ['LED', 'led', '']]
+            // const colors = ["#FF1654", "#247BA0", "#009000", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#FF1654", "#247BA0", "#009000"]
+            
+            $.each(GROUP, (i, v) => {
+                let val = 0, min = 0, max = 0;
+                if (i > 3) {
+                    max = 1;
+                    min = 0;
+                    val = sensors[0][v[1]]
+                    $("#" + v[1]).attr('value', val)
+                } else {
+                    max = data.reduce( (a, b) => { return a[v[1]] >= b[v[1]] ? a : b })[v[1]]
+                    min = data.reduce( (a, b) => { return a[v[1]] <= b[v[1]] ? a : b })[v[1]]
+                    val = data.at(-1)[v[1]]
+                }
+                let html = '';
+                let pg = ((val-min) / (max-min)) * 100
+
+                html = `<div class="card card-inner">
+                            <div class="card-face card-front">
+                                <div class="row col" style="align-items: center; font-size: 35px; color: #25252599;">
+                                    <i class="${icons[i]}" style="padding-bottom: 0.7rem;"></i>
+                                    <h2 class="h6" style="margin: 0; padding: 0;">${v[0]}</h2>
+                                </div>
+                                <div class="col">
+                                    <div class="progress mx-auto" id="pg-${v[1]}" data-value='${pg}'>
+                                        <span class="progress-left">
+                                            <span class="progress-bar border-primary" style="border-color: #25252599 !important;"></span>
+                                        </span>
+                                        <span class="progress-right">
+                                            <span class="progress-bar border-primary" style="border-color: #25252599 !important;"></span>
+                                        </span>
+                                        <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                            <span id="progress-hum-text-${v[1]}" style="font-size: 14px;">${i>3?(val==1?'ON':'OFF'):val}${v[2]}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-face card-back">
+                                <div class="row col" style="align-items: center; font-size: 35px; color: #25252599;">
+                                    <i class="${icons[i]}" style="padding-bottom: 0.7rem;"></i>
+                                    <h2 class="h6" style="margin: 0; padding: 0;">${v[0]}</h2>
+                                </div>
+                                <div class="row col" style="align-items: center; font-weight: bold;">
+                                    <span class="h6" style="font-size: 14px; font-weight: bold;">최대: ${max}${v[2]}</span>
+                                    <span class="h6" style="font-size: 14px; font-weight: bold;">최소: ${min}${v[2]}</span>
+                                    <span style="font-size: 13px;">${time}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                
+                $("#" + v[1]).html('')
+                $("#" + v[1]).append(html)
+            })
+            update_pg();
+        }
+
+        function toggle_sensor(sensor) {
+            let id = sensor.id;
+            let val = Number(!Number($("#" + id).attr('value')));
+
+            if (device_level < 1) alert('기기제어 권한이 없습니다.'); 
+            else {
+                axios({
+                    url: '/update_sensor',
+                    method: 'get',
+                    params: {
+                        device_id: device_id,
+                        sensor: id,
+                        val: val,
+                    },
+                }).then(function(data) {
+                    $("#" + id).attr('value', val);
+                    $("#pg-" + id).attr('data-value', val==0 ? 0 : 100)
+                    $("#progress-hum-text-" + id).text(val==1?'ON':'OFF')
+                    update_pg();
+                })
+            }
+        }
+        
+        function display() {
+            const value =  $('#display-btn').attr('value');
+            $('#display-btn').attr('value', Number(!Number(value)));
+            if (value == 0) {
+                $("#fish").attr('hidden', false)
+                $("#plant").attr('hidden', true)
+            } else {
+                $("#fish").attr('hidden', true)
+                $("#plant").attr('hidden', false)
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AQUAPONICS</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style/sidebar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="style/circle_progressbar.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/btn.css">
+    <!-- <link rel="stylesheet" href="style/rotateCard.css"> -->
+    <style>
+        .apexcharts-tooltip {
+            background: #f3f3f3;
+            color: black; 
+        }
+        .apexcharts-menu {
+            color: black;
+        }
+        .device-name {
+            display: inline;
+        }
+        .device-range {
+            float: right;
+        }
+        .envir-card {
+            padding: 0 0.5rem 0 0.5rem;
+            height: 150px;
+            color: black;
+            min-width: 230px;
+        }
+        .card-outer {
+            padding: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --bs-card-border-color: rgba(0, 0, 0, 0.1);
+            height: 100%;
+            width: 100%;
+            font-size: 1.2rem;
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+        }
+        .card-inner {
+            padding: 0.5rem;
+        }
+        .chart-card {
+            height: 400px;
+            overflow-y: hidden;
+            overflow-x: scroll;
+        }
+        .nav-link {
+            color: #6575d1;
+        }
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+            .chart-card {
+                padding: 16px 0 16px 0;
+            }
+            .envir-card {
+                padding: 0 0 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+        <nav class="navbar navbar-expand navbar-light" style="flex-grow: 1;">
+            <ul class="navbar-nav">
+                <a href="/"><img src="imgs/aqufarm.png" style="height: 45px; padding: 0.5rem; margin-left: 0.5rem;"></a>
+            </ul>
+        </nav>
+
+
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <ul class="d-flex navbar-nav" style="margin-left: auto !important;">
+                <li class="navbar-text" style="padding: 0.5rem;">
+                    <span id="level"></span>
+                </li>
+                <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
+                    <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
+                        <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#" onclick="javascript:logout()">로그아웃</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="navsidebar">
+            <div>
+                <a href="/" class="nav_logo" style="padding-left: 22px;">
+                    <i><img src="imgs/am_h20.png" width="30px;"></i>
+                    <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
+                </a>
+                <div class="nav_list">
+                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false"
+                        aria-controls="pages">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">대시보드</span>
+                    </a>
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    </ul>
+                    <a href="#" class="nav_link active" id="chartlink" onclick="openChart()">
+                        <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
+                        <span class="nav_name">차트</span>
+                    </a>
+                    <!--@if($level->학생용) -->
+                    <a href="/student_manage" class="nav_link" id="stumanag" title="학생관리">
+                        <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
+                    </a>
+                    <a href="/admin" class="nav_link" id="settings" title="설정">
+                        <i class='bx bx-cog nav_icon'></i>
+                        <span class="nav_name">설정</span>
+                    </a>
+                    <!--@end-->
+                </div>
+            </div>
+
+            <a href="#" onclick="logout()" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
+                <span class="nav_name">SignOut</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="bg-light srcn" style="padding: 1rem 1rem 1.5rem 1rem;">
+        <div class="row">
+            <h4 class="col-md-4 col-sm-4" id="dashboard_name"></h4>
+            <div class="col-md-5 col-sm-5"></div>
+            <div class="col-md-3 col-sm-3">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text">기간</span>
+                    <input type="text" name="stdate" id="stdate" class ="form-control" autocomplete="off">
+                    <button type="button" class="btn btn-purple" onclick="search_envir()"  id="modal_${v.id}">검색</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper" style="margin: 1rem 0 0 0;">
+            <ul class="nav nav-tabs" id="nav-tabs" style="padding: 0 0.2rem 0 0.5rem; border-color: transparent;">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#" data-bs-target="#temp">온도</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#sensor">센서</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#illum">조도</a>
+                </li>
+                <li class="nav-item" role="presentation" id="premium-tabs">
+                    <a class="nav-link" data-bs-toggle="tab" href="#" data-bs-target="#premium">EC/pH/DO</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="temp" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0;" id="temp-outer">
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
+                                <i class="fa-solid fa-chart-column"></i>
+                                <h6 style="display: inline;">온도차트</h6>
+                            </sapn>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body chart-card">
+                            <div id="temp-chart" style="min-width: 600px;"></div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+
+                <div class="tab-pane fade show" id="sensor" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0;" id="sensor-outer">
+
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
+                                <i class="fa-solid fa-chart-column"></i>
+                                <h6 style="display: inline;">센서차트</h6>
+                            </sapn>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body chart-card">
+                            <div id="sensor-chart" style="min-width: 600px;"></div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+
+                <div class="tab-pane fade show" id="illum" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0;" id="illum-outer">
+                        
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
+                                <i class="fa-solid fa-chart-column"></i>
+                                <h6 style="display: inline;">조도차트</h6>
+                            </sapn>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body chart-card">
+                            <div id="illum-chart" style="min-width: 600px;"></div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <div class="tab-pane fade show" id="premium" role="tabpanel" aria-labelledby="manager-tab">
+                    <div class="card-container row gx-2" style="margin: 0 0 1rem 0;" id="premium-outer">
+                        
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title" style="vertical-align: -webkit-baseline-middle; font-size: 16px;">
+                                <i class="fa-solid fa-chart-column"></i>
+                                <h6 style="display: inline;">EC/pH/DO차트</h6>
+                            </sapn>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body chart-card">
+                            <div id="premium-chart" style="min-width: 600px;"></div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="margin: 1.5rem 0 0 0;">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="data_table" style="white-space: nowrap; width: 100%;">
+                            <thead>
+                            </thead>
+                            <tbody id="table_body" style="min-height: 200px;">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/memberAuth.js"></script>
+    <script src="js/create_chart.js"></script>
+    <script>
+        const params = new URLSearchParams(location.search);
+        const device_id = params.get('device');
+        const service = params.get('service');
+        const BASIC = [{title: '외부온도'}, {title: '수온'}, {title: '습도'}, {title: '조도'}, {title: '모터'}, {title: '기포'}, {title: 'LED'}, {title: '시간'}]
+        const PREMIUM = [{title: '외부온도'}, {title: '수온'}, {title: '습도'}, {title: '조도'}, {title: '모터'}, 
+                        {title: '기포'}, {title: 'LED'}, {title: 'EC'}, {title: 'pH'}, {title: 'DO'}, {title: '시간'}]
+        const colors = ["#FF1654", "#247BA0", "#009000"]
+        const GROUP = [['외부온도', '수온', '습도'], ['모터', '기포', 'LED'], ['조도'], ['EC', 'pH', 'DO']];
+        const ENVIR_NAME = [['ex_temp', 'water_temp', 'hum'], ['motor', 'bubble', 'led'], ['illum'], ['ec', 'ph', 'do']];
+        var max = [{ extemp: 0, water: 0, hum: 0, illum: 0, ec: 0, ph: 0, do: 0 }]
+        var min = [{ extemp: 0, water: 0, hum: 0, illum: 0, ec: 0, ph: 0, do: 0 }]
+
+        $("#dashboard_name").text(params.get('name'));
+
+        $( function() { 
+            $("#stdate").daterangepicker({ 
+                autoUpdateInput: false,
+                timePicker: true,
+                locale: { cancelLabel: 'Clear' }
+            }); 
+            
+            $("#stdate").on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('YYYY-MM-DD HH:mm:ss') + ' ~ ' + picker.endDate.format('YYYY-MM-DD HH:mm:ss'));
+            });
+            $("#stdate").on('cancel.daterangepicker', function(ev, picker) { $(this).val(''); });
+        });
+
+        function create_table(data) {
+            let datas = [];
+            $.each(data, (i, v) => {
+                if (service == 0) datas.push([v.ex_temp, v.water_temp, v.hum, v.illum, v.motor==1?'ON':'OFF', v.bubble==1?'ON':'OFF', v.led==1?'ON':'OFF', dayjs(v.time).format('YY-MM-DD HH:mm')])
+                else datas.push([v.ex_temp, v.water_temp, v.hum, v.illum, v.motor==1?'ON':'OFF', v.bubble==1?'ON':'OFF', v.led==1?'ON':'OFF', v.ec, v.ph, v.do, dayjs(v.time).format('YY-MM-DD HH:mm')])
+                if (data.length - 1 == i) {
+                    $("#data_table").DataTable( 
+                    { 
+                        columns: service==0 ? BASIC : PREMIUM,
+                        columnDefs: [
+                            { targets: 1, className: 'noVis' },
+                            { className: 'dt-head-center', targets: "_all", },
+                            { className: 'dt-body-center', targets: "_all", },
+                        ], scrollX: true, paging: true, destroy: true, data: datas,
+                        dom: 'Bfrtip',
+                        buttons: ["copy", {extend: "csv", charset: "UTF-8", bom: true}, "print", "colvis"],
+                    });
+                }
+            })
+        }
+
+        var test = null;
+        function search_envir() {
+            axios({
+                url: '/search_envir',
+                method: 'post',
+                data: {
+                    device_id: device_id,
+                    start: $("#stdate").val().split(" ~ ")[0],
+                    end: $("#stdate").val().split(" ~ ")[1],
+                },
+            }).then(function(data) {
+                let temp_data = [[], [], []];
+                let senor_data = [[], [], []];
+                let illum_data = [[]];
+                let premium_data = [[], [], []];
+                let time = [];
+                
+                if (data.data.length == 0) alert("검색된 데이터가 존재하지 않습니다.");
+                $.each(data.data, (i, v) => {
+                    temp_data[0].push(v.ex_temp);
+                    temp_data[1].push(v.water_temp);
+                    temp_data[2].push(v.hum);
+                    senor_data[0].push(v.motor)
+                    senor_data[1].push(v.bubble)
+                    senor_data[2].push(v.led)
+                    illum_data[0].push(v.illum)
+                    premium_data[0].push(v.ec)
+                    premium_data[1].push(v.ph)
+                    premium_data[2].push(v.do)
+                    time.push(dayjs(v.time).format("YY-MM-DD HH:mm"));
+                    if (data.data.length - 1 == i) {
+                        create_envircard(data.data, time.at(-1))
+                        create_chart(temp_data, time, "#temp-chart", GROUP[0], 'temp', 3);
+                        create_chart(senor_data, time, "#sensor-chart", GROUP[1], 'sensor', 3);
+                        create_chart(illum_data, time, "#illum-chart", GROUP[2], 'illum', 1);
+                        if (service == 1) create_chart(premium_data, time, "#premium-chart", GROUP[3], 'premium', 3);
+                        create_table(data.data);
+                    }
+                })
+            })
+        }
+
+        $(document).ready(function() { 
+            if (service==0) $("#premium-tabs").hide()
+            search_envir(); 
+        })
+
+        function create_envircard(data, time) {
+            const card = ['#temp-outer', '#sensor-outer', '#illum-outer', '#premium-outer']
+            const icons = [['fa-solid fa-temperature-low', 'fa-solid fa-droplet', 'fa-solid fa-cloud'],
+                        ['fa-solid fa-gauge-high', 'fa-solid fa-water', 'fa-solid fa-lightbulb'], 
+                        ['fa-solid fa-solar-panel'], 
+                        ['fa-solid fa-bolt', 'fa-solid fa-pallet', 'fa-solid fa-sliders']]
+            const notation = [['°C', '°C', '%'], ['', '', ''], ['lx'], ['μS/cm', 'pH', 'mg/L']]
+            $.each(ENVIR_NAME, (i, v) => {
+                let html = '';
+                $(card[i]).html('');
+                if (service == 0 && i == 3) return
+                $.each(v, (i2, v2) => {
+                    let max = data.reduce( (a, b) => { return a[v2] >= b[v2] ? a : b })[v2]
+                    let min = data.reduce( (a, b) => { return a[v2] <= b[v2] ? a : b })[v2]
+                    let val = data.at(-1)[v2]
+                    let pg = ((val-min) / (max-min)) * 100
+                    html += `<div class="col-lg-${12/v.length} col-md-12 col-sm-12 envir-card">
+                                <div class="card card-outer">
+                                    <div class="row card-inner">
+                                        <div class="row col" style="align-items: center; font-size: 35px; color: ${colors[i2]};">
+                                            <i class="${icons[i][i2]}"></i>
+                                            <h2 class="h6" style="margin: 0; padding: 0;">${GROUP[i][i2]}</h2>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="progress mx-auto" data-value='${pg}'>
+                                                <span class="progress-left">
+                                                    <span class="progress-bar border-primary" style="border-color: ${colors[i2]} !important;"></span>
+                                                </span>
+                                                <span class="progress-right">
+                                                    <span class="progress-bar border-primary" style="border-color: ${colors[i2]} !important;"></span>
+                                                </span>
+                                                <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+                                                    <span id="progress-hum-text" style="font-size: 14px;">${i==1?(val==1?'ON':'OFF'):val}${notation[i][i2]}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 row" style="align-items: center;">
+                                            <span class="h6" style="font-size: 14px;">최대: ${max}${notation[i][i2]}</span>
+                                            <span class="h6" style="font-size: 14px;">최소: ${min}${notation[i][i2]}</span>
+                                            <span style="font-size: 13px;">${time}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+                })
+                $(card[i]).append(html);
+            })
+
+            $(".progress").each(function() {
+                var value = $(this).attr('data-value');
+                var left = $(this).find('.progress-left .progress-bar');
+                var right = $(this).find('.progress-right .progress-bar');
+
+                if (value > 0) {
+                    if (value <= 50) {
+                    right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+                    } else {
+                    right.css('transform', 'rotate(180deg)')
+                    left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+                    }
+                }
+            })
+            function percentageToDegrees(percentage) { return percentage / 100 * 360 }
+        }
+    </script>
+</body>
+</html>

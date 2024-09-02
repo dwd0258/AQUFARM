@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>아쿠팜</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="/style/member.css">
+    <link rel="stylesheet" href="/style/btn.css">
+</head>
+
+<body class="login-page" style="min-height: 496.781px;">
+<div class="login-logo">
+    <a href="/"><img src="imgs/aqufarm.png" style="height: 60px; padding: 0.5rem;"></a>
+</div>
+<div class="login-box" id="forgot_box">
+    <!-- /.login-logo -->
+    <div class="card" style="box-shadow: none">
+        <div class="card-body login-card-body">
+            <form name="userRegister">
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="email" name="id" id="uid" class="form-control" placeholder="아이디" pattern="[a-zA-Z0-9]+[@][a-zA-Z0-9]+[.]+[a-zA-Z]+[.]*[a-zA-Z]*">
+                        <button type="button" class="btn btn-purple" onclick="sendmail()">인증</button>
+                    </div>
+                    <label id="lUid" style="color: red;" hidden>아이디를 입력하세요.</label>
+                </div>
+                <div class="mb-3" id="valid_div" hidden>
+                    <div class="input-group">
+                        <input type="text" name="valid" id="valid" class="form-control" placeholder="인증번호"
+                        required oninvalid="this.setCustomValidity('인증번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <button type="button" class="btn btn-purple" id="mail_button" onclick="authMail()" disabled>확인</button>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="mb-3" style="margin-top: 25px;">
+                    <button type="button" class="btn btn-purple btn-block" id="reg" onclick="change()" disabled>비밀번호 찾기</button>
+                </div>
+            </form>
+
+            <div class="mb-3" style="font-size: 11px; ">
+                <ul style="float: right; list-style-type: none;">
+                    <li style="float: left;">
+                        <a href="/login" class="text-center">로그인</a>
+                    </li>
+                    <li style="float: left;">
+                        <a href="/register" class="text-center">회원가입</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+
+<div class="login-box" id="change_box" hidden>
+    <!-- /.login-logo -->
+    <div class="card" style="box-shadow: none">
+        <div class="card-body login-card-body">
+            <form class="form" id="changepw_form" action="/change_pw" method="post">
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="password" name="pw" id="upw" class="form-control" placeholder="비밀번호" title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다." 
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required>
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="password" name="pw2" id="upw2" class="form-control" placeholder="비밀번호 확인" title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다." 
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required>
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                    <label id="lUpw" style="color: red;" hidden>비밀번호를 확인하세요.</label>
+                </div>
+                <div class="mb-3" style="margin-top: 25px;">
+                    <button type="button" class="btn btn-purple btn-block" id="reg2">비밀번호 변경</button>
+                </div>
+            </form>
+            <div class="mb-3" style="font-size: 11px; ">
+                <ul style="float: right; list-style-type: none;">
+                    <li style="float: left;">
+                        <a href="/login" class="text-center">로그인</a>
+                    </li>
+                    <li style="float: left;">
+                        <a href="/register" class="text-center">회원가입</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+<div class="modal" id="schoolSerch" tabindex="-1">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">학교 검색</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <p>Modal body text goes here.</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary">완료</button>
+    </div>
+    </div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
+<script>
+    var number = null;
+    var auth = false;
+
+    function sendmail() {
+        let e = $("#uid").val();
+        email_regex = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;
+        if(!email_regex.test(e)) {
+            alert('이메일 형식이 올바르지 않습니다.');
+            return;
+        }
+        axios({
+            url: '/duplicate',
+            method: 'post',
+            data: {
+                uid: $("#uid").val(),
+            },
+        }).then(function(data) {
+            if (data.data) alert('존재하지 않는 회원입니다.');
+                else {
+                    $("#valid_div").attr("hidden", false);
+                    axios({
+                        url: '/smtp',
+                        method: 'post',
+                        data: {
+                            email: $("#uid").val()
+                        },
+                    }).then(function(data) {
+                        alert(data.data.msg);
+                        number = data.data.key;
+                        if (data.data.ok) $("#mail_button").attr('disabled', false);
+                    })
+                }
+        })
+    }
+    
+    function authMail() {
+        axios({
+            url: '/authMail',
+            method: 'post',
+            data: {
+                userNumber: $("#valid").val(),
+                number: number,
+            },
+        }).then(function(data) {
+            alert(data.data.msg);
+            if (data.data.ok) {
+                auth = true;
+                $("#reg").attr('disabled', false);
+            }
+        })
+    }
+
+    function change() {
+        if(!auth) alert('아이디 인증을 완료해주세요.');
+        else {
+            $("#forgot_box").attr('hidden', true);
+            $("#change_box").attr('hidden', false)
+        }
+    }
+
+
+    $(document).ready(function() {
+        $("#upw").on("focusout", function(e) {
+            if ($("#upw").val() != $("#upw2").val()) {
+                $("#lUpw").attr("hidden", false)
+                $("#reg2").attr('type', 'button');
+            }
+            else {
+                $("#lUpw").attr("hidden", true);
+                $("#reg2").attr('type', 'submit');
+            }
+        })
+        $("#upw2").on("focusout", function(e) {
+            if ($("#upw").val() != $("#upw2").val()) {
+                $("#lUpw").attr("hidden", false)
+                $("#reg2").attr('type', 'button');
+            }
+            else {
+                $("#lUpw").attr("hidden", true);
+                $("#reg2").attr('type', 'submit');
+            }
+        })
+    })
+</script>
+</body>
+</html>

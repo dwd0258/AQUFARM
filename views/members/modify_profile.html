@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AQUAPONICS</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.css"/>
+    <link rel="stylesheet" href="style/duallist.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/sidebar.css">
+    <link rel="stylesheet" href="style/modify_profile.css">
+    <link rel="stylesheet" href="style/btn.css">
+    <link rel="stylesheet" href="style/kakao_map.css">
+</head>
+
+
+<body class="login-page" id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+        <nav class="navbar navbar-expand navbar-light" style="flex-grow: 1;">
+            <ul class="navbar-nav">
+                <a href="/"><img src="imgs/aqufarm.png" style="height: 45px; padding: 0.5rem; margin-left: 0.5rem;"></a>
+            </ul>
+        </nav>
+
+
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <ui class="d-flex navbar-nav" style="margin-left: auto !important;">
+                <li class="navbar-text" style="padding: 0.5rem;">
+                    <span id="level"></span>
+                </li>
+                <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
+                    <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
+                        <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="javascript:logout()">로그아웃</a></li>
+                    </ul>
+                </li>
+            </ui>
+        </nav>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="navsidebar">
+            <div>
+                <a href="/" class="nav_logo" style="padding-left: 22px;">
+                    <i ><img src="imgs/am_h20.png" width="30px;"></i>
+                    <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
+                </a>
+                <div class="nav_list">
+                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">대시보드</span>
+                    </a>
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    </ul>
+                    <a href="/student_manage" class="nav_link" id="stumanag" title="학생관리">
+                        <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
+                    </a>
+                    <a href="/admin" class="nav_link" id="settings" title="설정">
+                        <i class='bx bx-cog nav_icon'></i>
+                        <span class="nav_name">설정</span>
+                    </a>
+                </div>
+            </div>
+
+            <a href="#" onclick="javascript:logout()" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
+                <span class="nav_name">SignOut</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="login-logo" style="margin-top: 2rem;">
+        <b>내정보</b>
+    </div>
+    <div class="login-box">
+        <!-- /.login-logo -->
+        <div class="card" style="box-shadow: none">
+            <div class="card-body login-card-body">
+                <form class="form" action="/modify_profile" name="userRegister" method="post">
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <select id="userlevel" name="level" class="form-select" required disabled
+                                oninvalid="this.setCustomValidity('목록중 하나를 선택하세요.')"
+                                oninput="this.setCustomValidity('')">
+                                <option disabled value="" selected>선택하세요</option>
+                                <option value="0">학생</option>
+                                <option value="1">교사</option>
+                                <option value="2">일반</option>
+                                <option value="3">관리자</option>
+                                <option value="4">관리자</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group" id="gen_region" style="display: none;">
+                            <select id="region" name="school" class="form-select" required disabled
+                            oninvalid="this.setCustomValidity('목록중 하나를 선택하세요.')" oninput="this.setCustomValidity('')"> 
+                                <option selected disabled value="" selected>선택하세요</option>
+                                <option value="서울특별시">서울특별시</option>
+                                <option value="광주광역시">광주광역시</option>
+                                <option value="대구광역시">대구광역시</option>
+                                <option value="부산광역시">부산광역시</option>
+                                <option value="울산광역시">울산광역시</option>
+                                <option value="인천광역시">인천광역시</option>
+                                <option value="강원도">강원도</option>
+                                <option value="경기도">경기도</option>
+                                <option value="경상남도">경상남도</option>
+                                <option value="경상북도">경상북도</option>
+                                <option value="전라남도">전라남도</option>
+                                <option value="전라북도">전라북도</option>
+                                <option value="충청남도">충청남도</option>
+                                <option value="충청북도">충청북도</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="gen_school">
+                        <div class="input-group">
+                            <span class="input-group-text">학교</span>
+                            <input type="text" name="school" id="school" class="form-control" placeholder="학교명" required onclick="openModal()"
+                             oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">이름</span>
+                            <input type="text" name="name" id="uname" class="form-control" placeholder="이름"
+                                title="한글 또는 영문으로&#13;2에서 10자리까지만 입력가능합니다." pattern="^[가-힣]{2,5}|[a-zA-Z]{2,10}"
+                                required oninvalid="this.setCustomValidity('이름을 입력하세요.')"
+                                oninput="this.setCustomValidity('')">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="gen_grade">
+                        <div class="input-group">
+                            <span class="input-group-text">학년</span>
+                            <input type="text" name="grade" id="grade" class="form-control" placeholder="학년"
+                                pattern="^[0-9]+$" title="숫자만 입력가능합니다." required
+                                oninvalid="this.setCustomValidity('학년을 입력하세요.')" oninput="this.setCustomValidity('')">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="gen_class">
+                        <div class="input-group">
+                            <span class="input-group-text">반</span>
+                            <input type="text" name="class" id="class" class="form-control" placeholder="반"
+                                pattern="^[0-9]+$" title="숫자만 입력가능합니다." required
+                                oninvalid="this.setCustomValidity('반을 입력하세요.')" oninput="this.setCustomValidity('')">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="gen_number">
+                        <div class="input-group">
+                            <span class="input-group-text">번호</span>
+                            <input type="text" name="number" id="number" class="form-control" placeholder="번호"
+                                pattern="^[0-9]+$" title="숫자만 입력가능합니다." required
+                                oninvalid="this.setCustomValidity('번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input type="password" name="pw" id="upw" class="form-control" placeholder="비밀번호"
+                                title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다."
+                                pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required
+                                oninvalid="this.setCustomValidity('비밀번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input type="password" name="pw2" id="upw2" class="form-control" placeholder="비밀번호 확인"
+                                title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다."
+                                pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required
+                                oninvalid="this.setCustomValidity('비밀번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                            <div class="input-group-append">
+                            </div>
+                        </div>
+                        <label id="lUPw" style="color: red;" hidden>비밀번호가 일치하지 않습니다.</label>
+                    </div>
+
+                    <!-- /.col -->
+                    <div class="mb-3" style="margin-top: 25px;">
+                        <button type="submit" class="btn btn-purple btn-block" id="reg">회원정보수정</button>
+                    </div>
+                    <div class="mb-3" style="margin-top: 25px;" id="select_device">
+                        
+                    </div>
+                    <div class="mb-3" style="margin-top: 25px;">
+                        <button type="button" class="btn btn-danger btn-block" id="delete_member" onclick="">회원탈퇴</button>
+                    </div>
+                </form>
+                <!-- <iframe name="iframe" style="display: none;"></iframe> -->
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+    <div class="modal" id="schoolSerch" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">학교 검색</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="map_wrap">
+                        <div class="maps" id="kakao_map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                        <div id="menu_wrap" class="bg_white">
+                            <div class="option">
+                                <div class="input-group" style="margin-bottom: 1rem;">
+                                    <input type="text" name="search_map" id="search_map" class="form-control" placeholder="검색" onkeypress="if(window.event.keyCode==13) { search_school() }">
+                                    <a class="input-group-text" href="#" onclick="search_school()">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr>
+                            <ul id="placesList"></ul>
+                            <div id="pagination"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="device_modal">
+        <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_title">title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <select multiple="multiple" class="multiple-select" id="modal-select">
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" id="modal_success_btn" onclick="updateDevice(this)">완료</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dual-listbox/dist/dual-listbox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="/js/duplicate.js"></script>
+    <script src="/js/member_control.js"></script>
+    <script src="/js/memberAuth.js"></script>
+    <script src="/js/permission_manage.js"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc&libraries=services"></script>
+    <script src="/js/kakao_map.js"></script>
+    <script>
+        var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
+
+        $(document).ready(function () {
+            $("#userlevel").val(member[0].level).prop("selected", true);
+
+            if (member[0].level == 3 || member[0].level == 4) {
+                $("#select_device").append(`<button type="button" class="btn btn-purple btn-block" onclick="modal_func('${member[0].id}', ${member[0].level}, 0)">권한관리</button>`)
+            }
+            if (member[0].level == 2 || member[0].level == 4) {
+                $("#region").attr('disabled', false);
+                $("#region").val(member[0].school);
+                $("#gen_region").show()
+                $.each(gen, (i, v) => {
+                    $(`#${v}`).hide()
+                    $(`#${v.split("gen_")[1]}`).attr('disabled', true)
+                })
+            }
+            $("#school").val(member[0].school)
+            $("#grade").val(member[0].grade)
+            $("#number").val(member[0].number)
+            $("#class").val(member[0].class)
+            $("#uname").val(member[0].name)
+
+            $("#upw2").on("focusout", function (e) {
+                var pw = $("#upw").val();
+                var pw2 = $("#upw2").val();
+                if (pw == '' || pw.length == 0 || pw2 == '' || pw.length == 0) { return false; }
+
+                if (pw == pw2) {
+                    $("#lUPw").attr("hidden", true)
+                    $("#reg").attr("type", "submit");
+                } else {
+                    $("#lUPw").attr("hidden", false)
+                    $("#reg").attr("type", "button");
+                }
+            })
+            $("#delete_member").attr('onclick', `sign('${id}', 1, 0, 0)`);
+        })   
+    </script>
+</body>
+</html>

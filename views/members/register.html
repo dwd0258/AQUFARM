@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>아쿠팜</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="/style/member.css">
+    <link rel="stylesheet" href="/style/btn.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="/style/kakao_map.css">
+</head>
+
+<body class="login-page">
+<div class="login-logo">
+    <a href="/"><img src="imgs/aqufarm.png" style="height: 60px; padding: 0.5rem;"></a>
+</div>
+<div class="row" id="register_box" style="margin: 40px auto 42px;">
+    <div class="col-lg-6 col-md-6 col-sm-12" >
+        <div class="card sel_register_card">
+            <div class="card-body select-card">
+                <button class="btn sel_register_btn row" type="button" id="general_btn" onclick="sel_register(this.id)">
+                    <i class="fa-solid fa-user register-icon"></i>
+                    <span class="register-font">일반용</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12" >
+        <div class="card sel_register_card">
+            <div class="card-body select-card">
+                <button class="btn sel_register_btn row" type="button" id="school_btn" onclick="sel_register(this.id)">
+                    <i class="fa-solid fa-graduation-cap register-icon"></i>
+                    <span class="register-font">학교용</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="login-box" id="login_box" style="display: none;">
+    <!-- /.login-logo -->
+    <div class="card" style="box-shadow: none">
+        <div class="card-body login-card-body">
+            <form class="form" action="/register" onsubmit="actions()" name="userRegister" method="post">
+                <div class="mb-3">
+                    <div class="input-group">
+                        <select id="level" name="level" class="form-select" required oninvalid="this.setCustomValidity('목록중 하나를 선택하세요.')" oninput="this.setCustomValidity('')"> 
+                            <option selected disabled value="" selected>선택하세요</option>
+                            <option value="0">학생</option>
+                            <option value="1">교사</option>
+                            <option value="2">일반</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group" id="gen_region" style="display: none;">
+                        <select id="region" name="school" class="form-select" required disabled
+                        oninvalid="this.setCustomValidity('목록중 하나를 선택하세요.')" oninput="this.setCustomValidity('')"> 
+                            <option selected disabled value="" selected>선택하세요</option>
+                            <option value="서울특별시">서울특별시</option>
+                            <option value="광주광역시">광주광역시</option>
+                            <option value="대구광역시">대구광역시</option>
+                            <option value="부산광역시">부산광역시</option>
+                            <option value="울산광역시">울산광역시</option>
+                            <option value="인천광역시">인천광역시</option>
+                            <option value="강원도">강원도</option>
+                            <option value="경기도">경기도</option>
+                            <option value="경상남도">경상남도</option>
+                            <option value="경상북도">경상북도</option>
+                            <option value="전라남도">전라남도</option>
+                            <option value="전라북도">전라북도</option>
+                            <option value="충청남도">충청남도</option>
+                            <option value="충청북도">충청북도</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group" id="gen_school">
+                        <input type="text" name="school" id="school" class="form-control" placeholder="학교명" onclick="openModal()"
+                        required oninvalid="this.setCustomValidity('학교명을 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <button type="button" class="btn btn-purple" id="school_btn" onclick="openModal()">검색</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="name" id="uname" class="form-control" placeholder="이름" title="한글 또는 영문으로&#13;2에서 10자리까지만 입력가능합니다." 
+                        pattern="^[가-힣]{2,5}|[a-zA-Z]{2,10}" required oninvalid="this.setCustomValidity('이름을 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3" id="gen_grade">
+                    <div class="input-group">
+                        <input type="text" name="grade" id="grade" class="form-control" placeholder="학년" 
+                        pattern="^[0-9]+$" title="숫자만 입력가능합니다." required oninvalid="this.setCustomValidity('학년을 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                    <label id="lUgrade" style="color: red;" hidden>학년을 입력하세요.</label>
+                </div>
+                <div class="mb-3" id="gen_class">
+                    <div class="input-group">
+                        <input type="text" name="class" id="class" class="form-control" placeholder="반" 
+                        pattern="^[0-9]+$" title="숫자만 입력가능합니다." required oninvalid="this.setCustomValidity('반을 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                    <label id="lUclass" style="color: red;" hidden>반을 입력하세요.</label>
+                </div>
+                <div class="mb-3" id="gen_number">
+                    <div class="input-group">
+                        <input type="text" name="number" id="number" class="form-control" placeholder="번호" 
+                        pattern="^[0-9]+$" title="숫자만 입력가능합니다." required oninvalid="this.setCustomValidity('번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                    <label id="lUnumber" style="color: red;" hidden>번호을 입력하세요.</label>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="id" id="uid" class="form-control" placeholder="이메일" pattern="[a-zA-Z0-9]+[@][a-zA-Z0-9]+[.]+[a-zA-Z]+[.]*[a-zA-Z]*">
+                        <button type="button" class="btn btn-purple" onclick="sendmail()">인증</button>
+                    </div>
+                    <label id="lUid" style="color: red;" hidden>사용할 수 없는 이메일입니다.</label>
+                </div>
+                <div class="mb-3" id="valid_div" hidden>
+                    <div class="input-group">
+                        <input type="text" name="valid" id="valid" class="form-control" placeholder="인증번호"
+                        required oninvalid="this.setCustomValidity('인증번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <button type="button" class="btn btn-purple" id="mail_button" onclick="authMail()" disabled>확인</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="password" name="pw" id="upw" class="form-control" placeholder="비밀번호" title="영숫자 조합으로&#13;6에서 15자리까지만 입력가능합니다." 
+                        pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,15}$" required oninvalid="this.setCustomValidity('비밀번호를 입력하세요.')" oninput="this.setCustomValidity('')">
+                        <div class="input-group-append">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.col -->
+                <div class="mb-3" style="margin-top: 25px;">
+                    <button type="button" class="btn btn-purple btn-block" id="reg" onclick="">회원가입</button>
+                </div>
+            </form>
+
+            <div class="mb-3" style="font-size: 11px; ">
+                <ul style="float: right; list-style-type: none;">
+                    <li style="float: left;">
+                        <a href="/login" class="text-center">로그인</a>
+                    </li>
+                    <li style="float: left;">
+                        <a href="/forgot_pw" class="text-center">비밀번호 분실</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+<div class="modal" id="schoolSerch" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-fullscreen-lg-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">학교 검색</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="map_wrap">
+                    <div class="maps" id="kakao_map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                    <div id="menu_wrap" class="bg_white">
+                        <div class="option">
+                            <div class="input-group" style="margin-bottom: 1rem;">
+                                <input type="text" name="search_map" id="search_map" class="form-control" placeholder="검색" autocomplete="off" onkeypress="if(window.event.keyCode==13) { search_school() }">
+                                <a class="input-group-text" href="#" onclick="search_school()">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <hr>
+                        <ul id="placesList"></ul>
+                        <div id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/57c8b4e229.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=826fecb6d8bc041c95f1ebfbd7dedcdc&libraries=services"></script>
+<script src="/js/kakao_map.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
+<script>
+    var gen = ['gen_school', 'gen_grade', 'gen_class', 'gen_number']
+    var number = null;
+
+    $(function() {
+        $("#reg").on('click', function(e) {
+            if(e.target.type == 'button') alert('모든 입력을 완료하거나\n아이디 인증을 완료해주세요.');
+        })
+    }) 
+
+    function sel_register(id) {
+        if (id =='general_btn') {
+            $("#level option[value='2']").attr('selected', true);
+            $("#level").attr('disabled', true);
+            $("#region").attr('disabled', false);
+            $("#gen_region").show()
+
+            $.each(gen, (i, v) => {
+                $(`#${v}`).hide()
+                $(`#${v.split("gen_")[1]}`).attr('disabled', true)
+            })
+        } else {
+            $("#level option[value='2']").attr('hidden', true);
+        }
+        $("#register_box").hide();
+        $("#login_box").show();
+    }
+    function actions() { $("#level").attr('disabled', false); }
+
+    function sendmail() {  
+        let e = $("#uid").val();
+        email_regex = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-za-z0-9\-]+/;;
+        if(!email_regex.test(e)) {
+            alert('이메일 형식이 올바르지 않습니다.');
+            return;
+        }
+
+        axios({
+            url: '/duplicate',
+            method: 'post',
+            data: {
+                uid: e,
+            },
+        }).then(function(data) {
+            if (data.data) {
+                axios({
+                    url: '/smtp',
+                    method: 'post',
+                    data: {
+                        email: e
+                    },
+                }).then(function(data) {
+                    alert(data.data.msg);
+                    number = data.data.key;
+                    $("#valid_div").attr("hidden", false);
+                    if (data.data.ok) $("#mail_button").attr('disabled', false);
+                })          
+            }
+            else alert('사용할 수 없는 아이디입니다.');
+        })
+    }
+    
+    function authMail() {
+        axios({
+            url: '/authMail',
+            method: 'post',
+            data: {
+                userNumber: $("#valid").val(),
+                number: number,
+            },
+        }).then(function(data) {
+            alert(data.data.msg);
+            if (data.data.ok) $("#reg").attr('type', 'submit');
+        })
+    }
+</script>
+</body>
+</html>

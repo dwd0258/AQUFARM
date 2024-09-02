@@ -1,0 +1,8 @@
+.card_content { transition: transform 1s; transform-style: preserve-3d; } 
+.card:hover .card_content { transition: transform 0.5s; } 
+.card_front,
+.card_back { width: 100%; backface-visibility: hidden; }
+
+/* 가로로 뒤집히는 카드 */
+/* .horizontal_card:hover .card_content { transform: rotateY(180deg); }  */
+.card_back { transform: rotateY(180deg); } 

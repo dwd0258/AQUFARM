@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AQUAPONICS</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style/sidebar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="style/style.css">
+    <style>
+        .device_card {
+            box-shadow: 7px 7px rgba(0, 0, 0, 0.2);
+        }
+        .card_row {
+            flex: 1;
+        }
+        .devices {
+            display: flex; 
+            align-items: center;
+        }
+        .device_img {
+            width: 120px; height: 80px; margin-right: 1rem; border-radius: 10px;
+        }
+        .device_permission {
+            margin: auto 3rem;
+        }
+        @media screen and (max-width: 673px) {
+            .devices {
+                flex-direction: column;
+                align-items: normal;
+            }
+            .device_img {
+                width: 100%;
+                height: 50%;
+            }
+            .device_permission {
+                margin: 0;
+                display: flex;
+                justify-content: end;
+            }
+            .card_row {
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+        <nav class="navbar navbar-expand navbar-light" style="flex-grow: 1;">
+            <ul class="navbar-nav">
+                <a href="/"><img src="imgs/aqufarm.png" style="height: 45px; padding: 0.5rem; margin-left: 0.5rem;"></a>
+            </ul>
+        </nav>
+
+
+        <nav class="navbar navbar-expand navbar-light bg-light">
+            <ui class="d-flex navbar-nav" style="margin-left: auto !important;">
+                <li class="navbar-text" style="padding: 0.5rem;">
+                    <span id="level"></span>
+                </li>
+                <li class="navbar-text usericon" style="color: black; padding: 0.5rem;">
+                    <a id="username" data-bs-toggle="dropdown" role="button" style="height: 28px;"></a>
+                    <ul class="dropdown-menu" aria-labelledby="username" style="width: 2rem; min-width: 100px;">
+                        <li><a class="dropdown-item" href="/modify_profile">정보수정</a></li>
+                        <!-- <li><a class="dropdown-item" href="#" id="dropdown_device">기기설정</a></li> -->
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="logout()">로그아웃</a></li>
+                    </ul>
+                </li>
+            </ui>
+        </nav>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="navsidebar">
+            <div>
+                <a href="/" class="nav_logo" style="padding-left: 22px;">
+                    <i ><img src="imgs/am_h20.png" width="30px;"></i>
+                    <span class="fas-3 bi_house" style="color: aliceblue;">아쿠팜</span>
+                </a>
+                <div class="nav_list">
+                    <a href="#" class="nav_link" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">대시보드</span>
+                    </a>
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    </ul>
+                    <a href="/student_manage" class="nav_link" id="stumanag" title="학생관리">
+                        <i class='bx bx-user nav_icon'></i> <span class="nav_name">학생관리</span>
+                    </a>
+                    <a href="/admin" class="nav_link" id="settings" title="설정">
+                        <i class='bx bx-cog nav_icon'></i>
+                        <span class="nav_name">설정</span>
+                    </a>
+                    <!-- <a href="#" class="nav_link" id="settings" data-bs-toggle="collapse" data-bs-target="#pages" aria-expanded="false" aria-controls="pages">
+                        <i class='bx bx-cog nav_icon'></i>
+                        <span class="nav_name">설정</span>
+                    </a>
+                    <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <a href="/admin" class="nav_link" id="stumanag">
+                            <i class='bx bx-user nav_icon'></i> <span class="nav_name">사용자관리</span>
+                        </a>
+                        <a href="#" class="nav_link" id="stumanag">
+                            <i class='bx bx-user nav_icon'></i> <span class="nav_name">가입승인</span>
+                        </a>
+                    </ul> -->
+                </div>
+            </div>
+
+            <a href="#" onclick="javascript:logout()" class="nav_link"> <i class='bx bx-log-out nav_icon'></i>
+                <span class="nav_name">SignOut</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="height-90 bg-light" style="padding: 1rem;">
+        <h4>기기 선택</h4>
+        <div class="wrapper" id="device_card">
+        </div>
+    </div>
+</div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.5/axios.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/memberAuth.js"></script>
+    <script>
+        $(document).ready(function() {
+            axios({
+                url: "/get_device",
+                method: "post",
+                data: { id: id },
+            }).then(function(data) {
+                let html = '';
+                $.each(data.data, (i, val) => {
+                    html += `<div class="card device_card" style="margin-bottom: 1rem;">
+                                <a href="#" onclick="window.location = ('/dashboard${val.service==1?'_premium':''}?name=${val.name}&device=${val.device_id}&service=${val.service}&level=${val.link_level}')" style="color: black;">
+                                    <div class="card-body devices" style="display: flex;">
+                                        <img class="device_img" src="imgs/sample.png">
+                                        <div class="row card_row">
+                                            <span style="font-weight: bold; font-size: 16px; padding-bottom: 0.3rem;">기기명: ${val.name}</span>
+                                            <span id="device_date_${i}">설치일: ${dayjs(val.time).format("YYYY-MM-DD")}</span>
+                                            <span id="device_join_${i}">가입일: ${dayjs(val.join).format("YYYY-MM-DD")}</span>
+                                        </div>
+                                        <div class="device_permission">
+                                            ${(val.link_level < 1) ? '<span id="device_per_${i}" style="color: red;">권한여부: N</span>' : '<span id="device_per_${i}" style="color: green;">권한여부: Y</span>'}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>`
+                    if (data.data.length - 1 == i) $("#device_card").append(html);
+                })
+            })
+        })
+        
+    </script>
+</body>
+</html>

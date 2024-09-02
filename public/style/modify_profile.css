@@ -1,0 +1,69 @@
+.card {
+    --bs-card-border-color: none;
+}
+.btn-block {
+    display: block;
+    width: 100%;
+}
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+}
+.login-page, .register-page {
+    -ms-flex-align: center;
+    align-items: center;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    /* height: 100vh; */
+    -ms-flex-pack: center;
+    justify-content: center
+}
+.login-logo, .register-logo {
+    font-size: 2.1rem;
+    font-weight: 300;
+    text-align: center
+}
+.login-box, .register-box {
+    width: 430px;
+    margin: 40px auto 42px;
+    padding: 0 69px;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.login-box .card, .register-box .card {
+    margin-bottom: 0
+}
+
+.login-card-body, .register-card-body {
+    color: #666;
+    padding: 55px 0 45px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 576px) {
+    .login-box, .register-box {
+        margin-top: .5rem;
+        width: 90%;
+        padding: 0 35px;
+    }
+    .login-card-body, .register-card-body {
+        padding: 40px 0 30px;
+    }
+}
+
+.mb-3 {
+    margin: 0 0 1.2rem !important;
+}
+label {
+    margin-top: 5px;
+    padding-left: 0.5rem;
+}
+.login-page {
+    min-height: 840px;
+    min-width: 372px;
+}
