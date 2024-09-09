@@ -2,7 +2,8 @@
 
 # □ 로고 디자인
 ![AM](https://github.com/user-attachments/assets/f66950f6-4a43-4e42-88d8-5e7e8fb50d98)
-
+![Aaufarm](https://github.com/user-attachments/assets/fb5b2f3e-07f2-487c-85f5-877276244a40)
+![아쿠팜로고(컬러)](https://github.com/user-attachments/assets/cc68207d-0aaa-4148-b9b7-1961c1d33c64)
 
 # Ⅰ. 프로젝트 내용
 
