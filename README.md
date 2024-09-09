@@ -1,6 +1,6 @@
 ![아쿠팜 로고](https://github.com/user-attachments/assets/cfc13cf4-3388-42ab-b1dd-7f03241e38ce)
 
-# 로고 디자인
+# □ 로고 디자인
 
 
 # Ⅰ. 프로젝트 내용
