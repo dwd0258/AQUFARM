@@ -1,6 +1,6 @@
 ![아쿠팜 로고](https://github.com/user-attachments/assets/cfc13cf4-3388-42ab-b1dd-7f03241e38ce)
 
-# □ 로고 디자인
+# ＃. 로고 디자인
 ![AM](https://github.com/user-attachments/assets/f66950f6-4a43-4e42-88d8-5e7e8fb50d98)
 ![아쿠팜로고](https://github.com/user-attachments/assets/b5164f5b-915d-4ba0-aa4e-b1ba232de76f)
 ![아쿠팜로고(컬러)](https://github.com/user-attachments/assets/cc68207d-0aaa-4148-b9b7-1961c1d33c64)
